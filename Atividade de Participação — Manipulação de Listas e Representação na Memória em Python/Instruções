@@ -1,0 +1,37 @@
+Em dupla, desenvolva no Google Colab um programa em Python que crie uma lista inicial e realize diferentes operações de manipulação.
+Utilize como ponto de partida:
+lista = [10, 20, 30]
+ 
+ 
+O programa deverá realizar, uma operação de cada vez:
+Exibir a lista inicial e seu id();
+Adicionar um elemento ao final com append();
+Inserir um elemento em uma posição específica com insert();
+Remover um elemento pelo valor utilizando remove();
+Remover um elemento pela posição utilizando pop();
+Alterar o valor de um elemento existente;
+Limpar os elementos utilizando clear().
+
+Após cada operação, o programa deverá mostrar:
+conteúdo atual da lista;
+id() da lista;
+índice, valor e id() dos elementos existentes.
+Utilize id() para investigar a identidade dos objetos durante a execução.
+
+Análise dos resultados
+Ao final do código, responda:
+a) O id() da lista mudou durante as operações? O que isso indica?
+b) O que aconteceu com os elementos quando novos valores foram adicionados?
+c) O que acontece com a referência de um elemento quando ele é removido da lista?
+d) Ao alterar um elemento da lista, o id() desse elemento permaneceu igual? Explique o resultado observado.
+e) Por que dizemos que uma lista em Python é um objeto mutável?
+f) Qual é a diferença entre alterar o conteúdo de uma lista e criar uma nova lista?
+
+Entrega no Blackboard
+A atividade deverá ser realizada em dupla, porém cada estudante deverá fazer sua própria entrega no Blackboard.
+Entregar um único arquivo em formato PDF, contendo:
+identificação dos dois integrantes da dupla;
+código Python desenvolvido;
+evidências da execução do programa;
+resultados obtidos;
+respostas das questões de análise.
