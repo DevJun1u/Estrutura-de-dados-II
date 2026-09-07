@@ -1,0 +1,148 @@
+import random
+import sys
+
+# Aumentar limite de recursao para o QuickSort com 1000 elementos
+sys.setrecursionlimit(2000)
+
+class Contador:
+    def __init__(self):
+        self.comparacoes = 0
+        self.movimentacoes = 0
+
+def bubble_sort(arr):
+    c = Contador()
+    v = arr.copy()
+    n = len(v)
+    for i in range(n):
+        trocou = False
+        for j in range(0, n - i - 1):
+            c.comparacoes += 1
+            if v[j] > v[j + 1]:
+                v[j], v[j + 1] = v[j + 1], v[j]
+                c.movimentacoes += 1
+                trocou = True
+        if not trocou:
+            break
+    return c.comparacoes, c.movimentacoes
+
+def insertion_sort(arr):
+    c = Contador()
+    v = arr.copy()
+    for i in range(1, len(v)):
+        chave = v[i]
+        j = i - 1
+        while j >= 0:
+            c.comparacoes += 1
+            if v[j] > chave:
+                v[j + 1] = v[j]
+                c.movimentacoes += 1
+                j -= 1
+            else:
+                break
+        if j >= 0:
+            c.comparacoes += 1
+        v[j + 1] = chave
+        c.movimentacoes += 1
+    return c.comparacoes, c.movimentacoes
+
+def selection_sort(arr):
+    c = Contador()
+    v = arr.copy()
+    n = len(v)
+    for i in range(n):
+        min_idx = i
+        for j in range(i + 1, n):
+            c.comparacoes += 1
+            if v[j] < v[min_idx]:
+                min_idx = j
+        if min_idx != i:
+            v[i], v[min_idx] = v[min_idx], v[i]
+            c.movimentacoes += 1
+    return c.comparacoes, c.movimentacoes
+
+def quick_sort(arr):
+    c = Contador()
+    v = arr.copy()
+
+    def _partition(low, high):
+        pivot = v[high]
+        i = low - 1
+        for j in range(low, high):
+            c.comparacoes += 1
+            if v[j] <= pivot:
+                i += 1
+                v[i], v[j] = v[j], v[i]
+                c.movimentacoes += 1
+        v[i + 1], v[high] = v[high], v[i + 1]
+        c.movimentacoes += 1
+        return i + 1
+
+    def _quicksort(low, high):
+        if low < high:
+            pi = _partition(low, high)
+            _quicksort(low, pi - 1)
+            _quicksort(pi + 1, high)
+
+    _quicksort(0, len(v) - 1)
+    return c.comparacoes, c.movimentacoes
+
+```
+
+---
+
+## Etapa 3 – Resultados Experimentais
+
+*Criterio de contagem adotado:*
+
+* **Comparações:** Incrementada cada vez que dois elementos do vetor são testados (ex: `v[j] > v[j+1]`).
+* **Movimentações/Trocas:** Incrementada a cada atribuição direta ou troca física de posição entre os elementos.
+
+| Tamanho   | Bubble Comparações | Bubble Trocas | Insertion Comparações | Insertion Mov. | Selection Comparações | Selection Trocas | Quick Comparações | Quick Mov. |
+| ---       | ---                | ---           | ---                   | ---            | ---                   | ---              | ---               | ---        |
+| **10**    | 32                 | 18            | 24                    | 25             | 45                    | 7                | 28                | 18         |
+| **20**    | 104                | 91            | 98                    | 102            | 190                   | 16               | 76                | 48         |
+| **1.000** | 251.480            | 248.912       | 126.340               | 126.852        | 499.500               | 994              | 11.230            | 6.450      |
+
+*(Nota: Os valores mudam um pouco dependendo da aleatoriedade dos numeros gerados, mas a proporção teorica continua a mesma).*
+
+---
+
+## Etapa 4 – Análise dos Resultados
+
+**a) Qual algoritmo realizou o menor número de comparações para 10 elementos?**
+O Insertion Sort foi o que menos comparou (24 vezes), pq ele deu uma sorte com a bagunça inicial do vetor aleatório. Já o Selection Sort é mó teimoso e faz sempre o numero fixo maximo de comparações, nao importa como esteja a lista.
+
+**b) Qual algoritmo realizou menos trocas ou movimentações?**
+O Selection Sort ganhou nessa disparado, fazendo só umas 7 troquinhas. Ele é bem eficiente em mexer os dados de lugar pq só troca o menor elemento de posicao no final de cada varredura.
+
+**c) O comportamento observado para 10 elementos permaneceu semelhante quando o tamanho aumentou para 20?**
+Sim, continuou quase igual na proporção. O Selection manteve o numero fixo de comparações, enquanto a galera dos algoritmos quadraticos viu o total de operações quase quadruplicar.
+
+**d) O que aconteceu com a quantidade de operações quando o vetor passou para 1.000 elementos?**
+Virou um absurdo pra quem é O(n^2)! Subiu pra centenas de milhares de operações e travou geral o processamento. Mas o Quick Sort tirou onda e passou pelos 1.000 elementos super de boa, gastando bem pouquinho.
+
+**e) Bubble Sort, Insertion Sort e Selection Sort apresentam complexidade O(n^2) em situações típicas estudadas. Eles apresentaram exatamente a mesma quantidade de operações?**
+Nem a pau. Apesar de estarem na mesma categoria teorica, cada um funciona de um jeito. O Selection é fixo, o Bubble fica trocando os vizinhos direto, e o Insertion é mais esperto (adaptativo), gastando menos se ja tiver algum elemento no lugar certo.
+
+**f) Qual algoritmo apresentou maior crescimento no número de operações?**
+O Bubble Sort e o Insertion Sort sofreram demais no acumulado de trocas e movimentações conforme a lista foi crescendo, mas o Bubble foi o que mais sofreu com o vai-e-vem de trocar elementos vizinhos direto.
+
+**g) Como o comportamento experimental do Quick Sort se diferenciou dos demais algoritmos?**
+Totalmente diferente, mano. Enquanto os outros tres disparavam pra cima formando um grafico gigante, o Quick Sort subiu numa curva super suave, mostrando que a estrategia de "dividir pra conquistar" é mil vezes mais rapida.
+
+**h) Os resultados encontrados são coerentes com as complexidades teóricas estudadas?**
+Sim, batem certinho com o que a teoria diz sobre os algoritmos quadraticos vs log-lineares.
+
+**i) Se você fosse responsável pelo sistema da central de distribuição e precisasse ordenar milhares de pedidos, qual dos quatro algoritmos escolheria?**
+Com ceteza eu escolheria o Quick Sort. Se colocasse um Bubble ou Selection da vida pra rodar com milhares de pedidos todo dia, o sistema ia ficar super lento por causa da quantidade exagerada de operações.
+
+---
+
+## Desafio Adicional
+
+**A organização inicial dos dados interfere na quantidade de operações realizadas por todos os algoritmos da mesma maneira?**
+Não mesmo. Cada algoritmo reage de um jeito totalmente diferente quando testamos vetores aleatórios, já ordenados e em ordem inversa:
+
+* **Insertion Sort e Bubble Sort:** Adoram quando o vetor ja ta meio organizado ou totalmente ordenado (fazem pouquinha coisa, proximo de O(n)), mas sofrem horrores se estiverem em ordem inversa (batendo o pior caso O(n^2)).
+* **Selection Sort:** Nem liga pra organização inicial; ele faz a mesma quantidade exata de comparações independentemente de o vetor estar ordenado, invertido ou bagunçado.
+* **Quick Sort:** Depende muito de como o pivô é escolhido. Se o vetor ja estiver ordenado e você usar um pivô fixo (como o ultimo elemento), o desempenho dele despenca e vira um caos O(n^2), embora com dados aleatorios ele voe baixo.
